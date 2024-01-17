@@ -138,8 +138,8 @@ export default function MessageList({
 
     return (
         <>
-            <div className='w-full max-w-4xl mx-auto'>
-                <ul ref={listRef} style={{maxHeight: 'calc(100vh - 200px)'}} className='overflow-auto'>
+            <div className='w-full mx-auto'>
+                <ul ref={listRef} style={{maxHeight: 'calc(100vh - 230px)'}} className='overflow-auto'>
                     {messageList.map((message) => {
                         const isAssistant = message.role === "assistant"
                         return (
@@ -149,7 +149,7 @@ export default function MessageList({
                                     isAssistant
                                         ? 'justify-start'
                                         : 'justify-end'
-                                } w-full max-w-4xl mx-auto flex space-x-6 px-4 py-6`}
+                                } w-full mx-auto flex space-x-6 px-6 py-6`}
                             >
                                 {message.role === 'user' && (
                                     <div>

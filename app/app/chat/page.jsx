@@ -5,7 +5,7 @@ import {useEffect, useState} from "react";
 import Tag from "/components/Tag/Tag";
 import {Flex} from "@chakra-ui/react";
 import ChatSidebar from '/components/Chat/ChatSidebar';
-import {get_app_chat_list, get_app_chat_message_list, delete_app_chat} from "/api/app";
+import {get_app_chat_list, get_app_chat_message_list, delete_app_chat, get_app_info} from "/api/app";
 import {create_app_chat} from "/api/app";
 import {useToast} from '@chakra-ui/react'
 import {useSearchParams} from 'next/navigation';
@@ -19,6 +19,15 @@ export default function Chat() {
     const [chatList, setChatList] = useState([])
     const [selectChatId, setSelectChatId] = useState(null)
     const [currentModel, setCurrentModel] = useState(undefined)
+
+    async function getAppInfo(app_id) {
+        if (app_id) {
+            const res = await get_app_info(app_id)
+            if (res) {
+                setCurrentModel(res.llm_name)
+            }
+        }
+    }
 
     async function getAppChatList(app_id) {
         if (app_id) {
@@ -44,6 +53,7 @@ export default function Chat() {
 
 
     useEffect(() => {
+        getAppInfo(app_id)
         getAppChatList(app_id)
     }, []);
 
@@ -79,7 +89,7 @@ export default function Chat() {
                 duration: 2000,
             })
         }
-        getAppChatList(selectApp.id)
+        await getAppChatList(app_id)
 
     }
 
@@ -111,7 +121,7 @@ export default function Chat() {
                 duration: 2000,
             })
         }
-        getAppChatList(app_id)
+        await getAppChatList(app_id)
     }
 
     const addMessage = (msg) => {
@@ -128,7 +138,8 @@ export default function Chat() {
 
     return (
         <div className='flex h-full' style={{maxHeight: 'calc(100vh - 68px)', minHeight: 'calc(100vh - 76px)'}}>
-            <div className='flex flex-1 border border-gray-200 bg-white rounded-3xl mt-1 mr-2 ml-2 mb-2 overflow-y-auto h-full'>
+            <div
+                className='flex flex-1 border border-gray-200 bg-white rounded-3xl mt-1 mr-2 ml-2 mb-2 overflow-y-auto h-full'>
                 <ChatSidebar appName={'test'}
                              chatList={chatList} selectChatId={selectChatId} setSelectChatId={setSelectChatId}
                              newChat={newChat} deleteChat={deleteChat}/>

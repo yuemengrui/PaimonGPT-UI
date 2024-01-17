@@ -11,14 +11,12 @@ import {
     ModalHeader,
     ModalOverlay
 } from "@chakra-ui/react";
-import {PiBroom} from "react-icons/pi";
 import {PiChatTeardropDotsThin} from "react-icons/pi";
 import {IoIosClose} from "react-icons/io";
 import {LiaThumbtackSolid} from "react-icons/lia";
 import MyTooltip from "../Tooltip/Tooltip";
 import {useToast} from '@chakra-ui/react'
 import {useState} from "react";
-import {delete_app_chat} from "../../api/app";
 
 
 export default function ChatSidebar({appName, chatList, selectChatId, setSelectChatId, newChat, deleteChat}) {
@@ -49,15 +47,6 @@ export default function ChatSidebar({appName, chatList, selectChatId, setSelectC
         })
     }
 
-    function deleteAllChat(chat_id) {
-        toast({
-            title: '该功能正在实现中，请稍等...',
-            status: 'warning',
-            position: 'top',
-            duration: 2000,
-        })
-    }
-
 
     return (
         <div className='w-[256px] rounded-l-3xl px-6 py-6'>
@@ -75,14 +64,6 @@ export default function ChatSidebar({appName, chatList, selectChatId, setSelectC
                         <span className='ml-2'>新对话</span>
                     </Flex>
                 </button>
-                {/*<MyTooltip label='删除所有对话'>*/}
-                {/*    <button*/}
-                {/*        className='ml-4 bg-white border rounded-lg border-gray-100 shadow-[0_0_2px_2px_rgba(0,0,0,0.1)] px-2 py-2 hover:text-pink-400 hover:bg-pink-100'*/}
-                {/*        onClick={deleteAllChat}*/}
-                {/*    >*/}
-                {/*        <PiBroom/>*/}
-                {/*    </button>*/}
-                {/*</MyTooltip>*/}
             </Flex>
             <Flex alignItems={'center'} mt={6} direction={"column"}>
                 {chatList.map((item) => {
@@ -94,7 +75,7 @@ export default function ChatSidebar({appName, chatList, selectChatId, setSelectC
                         >
                             <Flex position={'relative'} alignItems={'center'}>
                                 <PiChatTeardropDotsThin className='ml-2'/>
-                                <span className='ml-2'>{item.name || '新对话'}</span>
+                                <span className='ml-2 max-w-[96px] truncate overflow-hidden'>{item.name || '新对话'}</span>
                                 <div
                                     onClick={(e) => {
                                         topping(e, item.id)

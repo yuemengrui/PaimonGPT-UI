@@ -2,16 +2,12 @@ import MyButton from "/components/common/MyButton"
 import {PiLightningFill} from "react-icons/pi"
 import {FiSend} from "react-icons/fi"
 import TextareaAutoSize from "react-textarea-autosize"
-import React, {useEffect, useState} from "react"
+import React, {useState} from "react"
 import {v4 as uuidv4} from "uuid"
 import {fetchEventSource} from '@microsoft/fetch-event-source';
-import {useToast} from '@chakra-ui/react'
 
-export default function ChatInput({ appId, currentModel, selectChatId, addMessage, updateMessage}) {
-    const toast = useToast()
+export default function ChatInput({appId, currentModel, selectChatId, addMessage, updateMessage}) {
     const [messageText, setMessageText] = useState("")
-
-    const [custom, setCustom] = useState({})
 
 
     async function send() {
@@ -45,8 +41,7 @@ export default function ChatInput({ appId, currentModel, selectChatId, addMessag
                 "uid": message.id,
                 "answer_uid": responseMessage.id,
                 "prompt": message.content,
-                "model_name": currentModel,
-                "custom": custom
+                "model_name": currentModel
             }),
             onmessage(msg) {
                 // 解码内容

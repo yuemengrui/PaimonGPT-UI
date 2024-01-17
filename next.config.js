@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: 'export',
-    images: { unoptimized: true },
+    // output: 'export',
+    images: {unoptimized: true},
     webpack: (config) => {
         config.module.rules.push({
             test: /\.md$/,
@@ -13,14 +13,14 @@ const nextConfig = {
     },
 
     // dev
-    // async rewrites() {
-    //     return [
-    //             {
-    //                 source: '/ai/:path*',
-    //                 destination: 'http://127.0.0.1:5000/ai/:path*',
-    //             }
-    //         ]
-    // }
+    async rewrites() {
+        return [
+            {
+                source: '/ai/:path*',
+                destination: 'http://134.175.246.119:9236/ai/:path*',
+            }
+        ]
+    }
 }
 
 module.exports = nextConfig

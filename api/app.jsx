@@ -35,7 +35,7 @@ export async function get_app_info(app_id) {
     return await http(process.env.NEXT_PUBLIC_APP_INFO, args)
 }
 
-export async function app_info_modify(app_id, name, llm_name, kb_id = undefined) {
+export async function app_info_modify(app_id, name,  description='', llm_name, kb_id = undefined) {
     const args = {
         method: "POST",
         headers: {
@@ -45,6 +45,7 @@ export async function app_info_modify(app_id, name, llm_name, kb_id = undefined)
         body: JSON.stringify({
             "app_id": app_id,
             "name": name,
+            "description": description,
             "llm_name": llm_name,
             "kb_id": kb_id
         })
