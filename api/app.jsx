@@ -35,7 +35,7 @@ export async function get_app_info(app_id) {
     return await http(process.env.NEXT_PUBLIC_APP_INFO, args)
 }
 
-export async function app_info_modify(app_id, name,  description='', llm_name, kb_id = undefined) {
+export async function app_info_modify(app_id, name, description = '', llm_name, kbs=[]) {
     const args = {
         method: "POST",
         headers: {
@@ -47,7 +47,7 @@ export async function app_info_modify(app_id, name,  description='', llm_name, k
             "name": name,
             "description": description,
             "llm_name": llm_name,
-            "kb_id": kb_id
+            "kbs": kbs
         })
     }
 
@@ -56,25 +56,7 @@ export async function app_info_modify(app_id, name,  description='', llm_name, k
 }
 
 
-export async function get_app_create_system_app_list() {
-    const args = {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": localStorage.getItem('Authorization')
-        }
-    }
-
-    const response = await http(process.env.NEXT_PUBLIC_APP_CREATE_SYSTEM_APP_LIST, args)
-
-    if (response) {
-        return response['list']
-    } else {
-        return []
-    }
-}
-
-export async function app_create_system_app(system_app_id) {
+export async function app_create_from_appstore(app_id) {
     const args = {
         method: "POST",
         headers: {
@@ -82,11 +64,11 @@ export async function app_create_system_app(system_app_id) {
             "Authorization": localStorage.getItem('Authorization')
         },
         body: JSON.stringify({
-            "system_app_id": system_app_id
+            "app_id": app_id
         })
     }
 
-    return await http(process.env.NEXT_PUBLIC_APP_CREATE_SYSTEM_APP, args)
+    return await http(process.env.NEXT_PUBLIC_APP_CREATE_FROM_APPSTORE, args)
 
 }
 

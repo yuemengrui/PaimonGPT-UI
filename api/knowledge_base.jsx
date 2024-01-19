@@ -22,7 +22,7 @@ export async function get_knowledge_base_list() {
 }
 
 
-export async function kb_create(name, embedding_model) {
+export async function kb_create(name, embedding_model, description= '') {
     const args = {
         method: "POST",
         headers: {
@@ -31,7 +31,8 @@ export async function kb_create(name, embedding_model) {
         },
         body: JSON.stringify({
             "name": name,
-            "embedding_model": embedding_model
+            "embedding_model": embedding_model,
+            "description": description
         })
     }
 
@@ -52,9 +53,7 @@ export async function kb_delete(kb_id) {
         })
     }
 
-    const response = await http(process.env.NEXT_PUBLIC_KB_DELETE, args)
-
-    console.log('response', response)
+    return  await http(process.env.NEXT_PUBLIC_KB_DELETE, args)
 }
 
 

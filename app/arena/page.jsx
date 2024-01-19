@@ -18,8 +18,8 @@ export default function Arena() {
     ]
 
     return (
-        <div className='flex w-full bg-blue-50/30'>
-            <div className='flex flex-1 flex-col bg-white border border-gray-200 rounded-3xl mt-4 mr-4 ml-4 mb-4'>
+        <div className='flex h-full' style={{maxHeight: 'calc(100vh - 60px)', minHeight: 'calc(100vh - 76px)'}}>
+            <div className='flex flex-1 flex-col bg-white border border-gray-200 rounded-3xl mt-1 mr-2 ml-2 mb-1'>
                 <div className='w-full h-[48px]'>
                     <Tabs mt={2} mb={2} size={'sm'} align={'center'} variant={'soft-rounded'} colorScheme={'pink'} defaultIndex={0}
                           onChange={(index) => setSelectMode(index)}>

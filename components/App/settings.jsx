@@ -72,7 +72,7 @@ export default function Settings({appInfo, setAppInfo}) {
             <div>
                 <Flex gap={20} alignItems={'center'}>
                     <div className='text-lg'>应用名称</div>
-                    {appInfo.is_system ? (
+                    {appInfo.is_store ? (
                         <div>{appInfo.name}</div>
                     ) : (
                         <input
@@ -106,7 +106,7 @@ export default function Settings({appInfo, setAppInfo}) {
             <div className='mt-10'>
                 <Flex gap={20} alignItems={'center'}>
                     <div className='text-lg'>应用类型</div>
-                    {appInfo.is_system ? (
+                    {appInfo.is_store ? (
                         <div>系统应用</div>
                     ) : (
                         <div>自建应用</div>

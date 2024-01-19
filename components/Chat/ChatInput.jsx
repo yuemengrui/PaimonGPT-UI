@@ -3,75 +3,10 @@ import {PiLightningFill} from "react-icons/pi"
 import {FiSend} from "react-icons/fi"
 import TextareaAutoSize from "react-textarea-autosize"
 import React, {useState} from "react"
-import {v4 as uuidv4} from "uuid"
-import {fetchEventSource} from '@microsoft/fetch-event-source';
 
-export default function ChatInput({appId, currentModel, selectChatId, addMessage, updateMessage}) {
+
+export default function ChatInput({stream_generate}) {
     const [messageText, setMessageText] = useState("")
-
-
-    async function send() {
-        const message = {
-            id: uuidv4(),
-            role: "user",
-            type: 'text',
-            content: messageText,
-        }
-        setMessageText("")
-        addMessage(message)
-
-        const responseMessage = {
-            id: uuidv4(),
-            role: "assistant",
-            type: 'text',
-            content: "正在思考中...",
-            response: {},
-        }
-        addMessage(responseMessage)
-
-        await fetchEventSource(process.env.NEXT_PUBLIC_LLM_CHAT, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": localStorage.getItem("Authorization")
-            },
-            body: JSON.stringify({
-                "app_id": appId,
-                "chat_id": selectChatId,
-                "uid": message.id,
-                "answer_uid": responseMessage.id,
-                "prompt": message.content,
-                "model_name": currentModel
-            }),
-            onmessage(msg) {
-                // 解码内容
-                try {
-                    const res = JSON.parse(msg.data)
-                    updateMessage({
-                        id: responseMessage.id,
-                        role: responseMessage.role,
-                        type: 'text',
-                        content: res['answer'],
-                        response: res,
-                    })
-                } catch (e) {
-                    console.log(e)
-                }
-
-            },
-            onerror(error) {
-                updateMessage({
-                    id: responseMessage.id,
-                    role: responseMessage.role,
-                    type: 'text',
-                    content: '抱歉！服务繁忙！请稍后重试！',
-                    response: {},
-                })
-                throw error
-            }
-        })
-
-    }
 
     function handleEnter(e) {
         if (e.metaKey && e.code === 'Enter') {
@@ -79,7 +14,8 @@ export default function ChatInput({appId, currentModel, selectChatId, addMessage
         } else {
             if (e.code === 'Enter') {
                 if (messageText) {
-                    send()
+                    stream_generate(messageText)
+                    setMessageText("")
                 }
             }
         }
@@ -111,7 +47,7 @@ export default function ChatInput({appId, currentModel, selectChatId, addMessage
                         icon={FiSend}
                         disabled={messageText.trim() === ""}
                         variant='primary'
-                        onClick={send}
+                        onClick={() => stream_generate(messageText)}
                     />
                 </div>
             </div>
