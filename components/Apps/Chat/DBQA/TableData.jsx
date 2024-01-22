@@ -14,11 +14,10 @@ import {useEffect} from "react";
 import {useState} from "react";
 import {getCurrentDatabaseTableData} from "/api/db";
 
-export default function TableData(props) {
-    const tables = props.tables || [];
-    const [table, setTable] = useState("");
-    const [ths, setThs] = useState([]);
-    const [data, setData] = useState([]);
+export default function TableData({db_name, tableInfo}) {
+    const [table, setTable] = useState(tableInfo[0].table_name || undefined);
+    const [tableFields, setTableFields] = useState([]);
+    const [tableData, setTableData] = useState([]);
     const [pagination, setPagination] = useState({
         page: 1,
         pageSize: 20,
@@ -27,12 +26,12 @@ export default function TableData(props) {
 
     function handlePageChange(page) {
         getCurrentDatabaseTableData(
-            props.session,
+            db_name,
             table,
             page,
             pagination.pageSize
         ).then((res) => {
-            setData(res.list);
+            setTableData(res.data);
             setPagination({
                 ...pagination,
                 page,
@@ -44,17 +43,18 @@ export default function TableData(props) {
     useEffect(() => {
         if (table) {
             getCurrentDatabaseTableData(
-                props.session,
+                db_name,
                 table,
                 1,
                 pagination.pageSize
             ).then((res) => {
-                if (res.length > 0) {
-                    let item = res[0];
+                console.log('xx', res)
+                if (res.data.length > 0) {
+                    let item = res.data[0];
                     const keys = Object.keys(item);
-                    setThs(keys);
+                    setTableFields(keys);
                 }
-                setData(res.list);
+                setTableData(res.data);
                 setPagination({
                     ...pagination,
                     page: 1,
@@ -63,37 +63,39 @@ export default function TableData(props) {
             });
         }
     }, [table]);
-    const disablePreviousPage = pagination.page == 1;
+    const disablePreviousPage = pagination.page === 1;
     const disableNextPage =
         pagination.page >= pagination.total / pagination.pageSize;
     return (
         <div>
-            <Select onChange={(e) => setTable(e.target.value)}>
-                {tables.map((item) => (
-                    <option key={item.id} value={item.name}>{item.name}</option>
+            <Select onChange={(e) => {
+                setTable(e.target.value)
+            }}>
+                {tableInfo.map((item) => (
+                    <option key={item.table_name} value={item.table_name}>{item.table_name}</option>
                 ))}
             </Select>
-            <TableContainer>
-                <Table variant="simple">
+            <TableContainer mt={6}>
+                <Table variant="striped" size={'sm'}>
                     <Thead>
                         <Tr>
-                            {ths.map((th) => (
-                                <Th key={th.id} keys={th}>{th}</Th>
+                            {tableFields.map((th) => (
+                                <Th key={th} keys={th}>{th}</Th>
                             ))}
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {data.map((item) => (
+                        {tableData.length > 0 && tableData.map((item) => (
                             <Tr key={item.id}>
-                                <Td>{item.name}</Td>
-                                <Td>{item.type}</Td>
-                                <Td>{item.default}</Td>
-                                <Td>{item.comment}</Td>
+                                {tableFields.map((tf) => {
+                                    return (<Td key={tf}>{item[tf]}</Td>)
+                                })}
                             </Tr>
                         ))}
                     </Tbody>
                 </Table>
             </TableContainer>
+
             <div className="text-right mt-4">
                 <Button
                     disabled={disablePreviousPage}

@@ -1,10 +1,12 @@
 'use client'
 import Icon from "../Icon/Icon";
-import {useToast} from '@chakra-ui/react'
+import {useRouter} from 'next/navigation';
+import {useToast} from '@chakra-ui/react';
 import {app_create_from_appstore} from "/api/app";
 
 
 export default function AppStoreAppCard({app, installed}) {
+    const router = useRouter()
     const toast = useToast()
 
     async function AddApp() {
@@ -16,6 +18,7 @@ export default function AppStoreAppCard({app, installed}) {
                 position: 'top',
                 duration: 2000,
             })
+            router.push('/appstore')
         }
     }
 

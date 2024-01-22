@@ -32,41 +32,28 @@ export default function Page({appInfo}) {
     const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
     const [port, setPort] = useState("3306");
+    const [dbName, setDBName] = useState("")
 
     const [loading, setLoading] = useState(false);
     const [session, setSession] = useState("");
+    const [dbTableInfo, setDBTableInfo] = useState(null)
 
     async function handleDatabaseSessionClose() {
+        try {
+            await closeDatabaseSession(session)
+        } catch (error) {
+        }
         setSession("")
-        // try {
-        //     const done = await closeDatabaseSession(session)
-        //     if (done) {
-        //         setSession("")
-        //     }
-        // } catch (error) {
-        //
-        // }
     }
 
     async function handleSubmit(e) {
         e.preventDefault();
-        console.log('db', db)
-        // const payload = {
-        //     db,
-        // };
-        // if (db === "custom") {
-        //     payload.ip = ip;
-        //     payload.user = user;
-        //     payload.password = password;
-        //     payload.port = port;
-        // }
         try {
             setLoading(true);
-            const res = await createDatabaseSession(db);
-            console.log(res)
+            const res = await createDatabaseSession(db, ip, port, user, password, dbName);
             if (res) {
-                // TODO: 链接成功
                 setSession(db);
+                setDBTableInfo(res.table_info)
             } else {
                 // TODO: 异常处理
             }
@@ -79,7 +66,6 @@ export default function Page({appInfo}) {
     useEffect(() => {
         getPresetDatabases()
             .then((res) => {
-                console.log(res)
                 const temp = []
                 res.map((item) => (temp.push({'name': item, 'value': item})))
                 setPresetDatabases([...temp, custom]);
@@ -99,20 +85,16 @@ export default function Page({appInfo}) {
                             </div>
                             <Tabs mt={4}>
                                 <TabList>
-                                    <Tab>连接</Tab>
                                     <Tab>表结构</Tab>
                                     <Tab>表数据</Tab>
                                 </TabList>
 
                                 <TabPanels>
                                     <TabPanel>
-                                        <p>one!</p>
+                                        <TableStructure tableInfo={dbTableInfo}/>
                                     </TabPanel>
                                     <TabPanel>
-                                        <TableStructure/>
-                                    </TabPanel>
-                                    <TabPanel>
-                                        <TableData/>
+                                        <TableData db_name={session} tableInfo={dbTableInfo}/>
                                     </TabPanel>
                                 </TabPanels>
                             </Tabs>
@@ -156,6 +138,13 @@ export default function Page({appInfo}) {
                                             <Input
                                                 value={port}
                                                 onChange={(e) => setPort(e.target.value)}
+                                            />
+                                        </FormControl>
+                                        <FormControl>
+                                            <FormLabel>数据库名</FormLabel>
+                                            <Input
+                                                value={dbName}
+                                                onChange={(e) => setDBName(e.target.value)}
                                             />
                                         </FormControl>
                                     </Fragment>

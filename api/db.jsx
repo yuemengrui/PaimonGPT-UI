@@ -39,24 +39,38 @@ export async function createDatabaseSession(preset = '', host = '', port = '', u
     return await http(process.env.NEXT_PUBLIC_DBQA_DB_CONNECT, args)
 }
 
-export function closeDatabaseSession(session) {
-    return http('/', {
-        method: 'DELETE',
+export async function closeDatabaseSession(db_name) {
+    const args = {
+        method: "POST",
         headers: {
-            Authorization: localStorage.getItem("Authorization"),
+            "Content-Type": "application/json",
+            "Authorization": localStorage.getItem('Authorization')
         },
-        body: JSON.stringify({session}),
-    })
+        body: JSON.stringify({
+            "db_name": db_name
+        })
+    }
+
+    return http(process.env.NEXT_PUBLIC_DBQA_DB_DISCONNECT, args)
 }
 
-export function getCurrentDatabaseTableStructure(session, table) {
-    let url = '/' + `?session=${session}&table=${table}`
-    return http(url)
-}
 
-export function getCurrentDatabaseTableData(session, table, page, pageSize) {
-    let url = '/' + `?session=${session}&table=${table}&page=${page}&pageSize=${pageSize}`
-    return http(url)
+export async function getCurrentDatabaseTableData(db_name, table_name, page, page_size) {
+    const args = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": localStorage.getItem('Authorization')
+        },
+        body: JSON.stringify({
+            "db_name": db_name,
+            "table_name": table_name,
+            "page": page,
+            "page_size": page_size
+        })
+    }
+
+    return await http(process.env.NEXT_PUBLIC_DBQA_DB_TABLE_DATA, args)
 }
 
 
