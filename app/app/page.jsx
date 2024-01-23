@@ -10,6 +10,8 @@ import {useToast} from '@chakra-ui/react'
 import AppCard from "/components/App/AppCard";
 import Icon from "../../components/Icon/Icon";
 import {
+    Checkbox,
+    CheckboxGroup,
     Input,
     Select,
     Button,
@@ -19,7 +21,10 @@ import {
     ModalContent,
     ModalFooter,
     ModalHeader,
-    ModalOverlay
+    ModalOverlay,
+    Radio,
+    RadioGroup,
+    Stack
 } from "@chakra-ui/react";
 
 
@@ -31,7 +36,7 @@ export default function App() {
     const [showCreateAppModal, setShowCreateAppModal] = useState(false)
     const [newAppName, setNewAppName] = useState('')
     const [selectLLM, setSelectLLM] = useState(null)
-    const [selectKB, setSelectKB] = useState(null)
+    const [selectKB, setSelectKB] = useState([])
 
     async function getAppList() {
         const res = await get_app_list()
@@ -62,12 +67,19 @@ export default function App() {
         setShowCreateAppModal(false)
         setNewAppName('')
         setSelectLLM(null)
-        setSelectLLM(null)
+        setSelectKB([])
     }
 
     async function createApp() {
         if (newAppName && selectLLM) {
-            const resp = await app_create(newAppName, selectLLM, selectKB)
+            const kbs = []
+            if (selectKB.length > 0) {
+                selectKB.map((item) => {
+                    const kb = KBList.filter((k) => k.name === item)[0]
+                    kbs.push(kb)
+                })
+            }
+            const resp = await app_create(newAppName, selectLLM, kbs)
             if (resp) {
                 if (resp.errmsg) {
                     toast({
@@ -168,19 +180,14 @@ export default function App() {
                                     )
                                 })}
                             </Select>
-                            <div>请选择知识库，可不选</div>
-                            <Select
-                                onChange={(e) => {
-                                    setSelectKB(e.target.value)
-                                }}
-                                placeholder='请选择知识库'
-                            >
-                                {KBList.map((item) => {
-                                    return (
-                                        <option key={item.id} value={item.id}>{item.name}</option>
-                                    )
-                                })}
-                            </Select>
+                            <div>请选择知识库，可不选，可多选</div>
+                            <CheckboxGroup onChange={(e) => setSelectKB(e)}>
+                                <Stack spacing={5} direction='column'>
+                                    {KBList.map((item) => (
+                                        <Checkbox key={item.id} value={item.name}>{item.name}</Checkbox>
+                                    ))}
+                                </Stack>
+                            </CheckboxGroup>
                         </ModalBody>
                         <ModalFooter>
                             <Button border='1px' borderColor='gray.200' onClick={createApp}>确认</Button>

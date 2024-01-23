@@ -15,7 +15,7 @@ import {useState} from "react";
 import {getCurrentDatabaseTableData} from "/api/db";
 
 export default function TableData({db_name, tableInfo}) {
-    const [table, setTable] = useState(tableInfo[0].table_name || undefined);
+    const [table, setTable] = useState(null);
     const [tableFields, setTableFields] = useState([]);
     const [tableData, setTableData] = useState([]);
     const [pagination, setPagination] = useState({
@@ -68,33 +68,33 @@ export default function TableData({db_name, tableInfo}) {
         pagination.page >= pagination.total / pagination.pageSize;
     return (
         <div>
-            <Select onChange={(e) => {
-                setTable(e.target.value)
-            }}>
+            <Select onChange={(e) => {setTable(e.target.value)}} placeholder={'请选择数据表'}>
                 {tableInfo.map((item) => (
                     <option key={item.table_name} value={item.table_name}>{item.table_name}</option>
                 ))}
             </Select>
-            <TableContainer mt={6}>
-                <Table variant="striped" size={'sm'}>
-                    <Thead>
-                        <Tr>
-                            {tableFields.map((th) => (
-                                <Th key={th} keys={th}>{th}</Th>
-                            ))}
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {tableData.length > 0 && tableData.map((item) => (
-                            <Tr key={item.id}>
-                                {tableFields.map((tf) => {
-                                    return (<Td key={tf}>{item[tf]}</Td>)
-                                })}
+            {table && (
+                <TableContainer mt={6}>
+                    <Table variant="striped" size={'sm'}>
+                        <Thead>
+                            <Tr>
+                                {tableFields.map((th) => (
+                                    <Th key={th} keys={th}>{th}</Th>
+                                ))}
                             </Tr>
-                        ))}
-                    </Tbody>
-                </Table>
-            </TableContainer>
+                        </Thead>
+                        <Tbody>
+                            {tableData.length > 0 && tableData.map((item) => (
+                                <Tr key={item.id}>
+                                    {tableFields.map((tf) => {
+                                        return (<Td key={tf}>{item[tf]}</Td>)
+                                    })}
+                                </Tr>
+                            ))}
+                        </Tbody>
+                    </Table>
+                </TableContainer>
+            )}
 
             <div className="text-right mt-4">
                 <Button

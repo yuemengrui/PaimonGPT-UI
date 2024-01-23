@@ -1,6 +1,6 @@
 'use client'
 
-import {Flex, Select} from "@chakra-ui/react";
+import {Flex, Select, CheckboxGroup, Checkbox, Stack} from "@chakra-ui/react";
 import React, {useEffect, useState} from "react";
 import {get_llm_list} from "/api/chat";
 import {get_knowledge_base_list} from "/api/knowledge_base";
@@ -10,11 +10,17 @@ import {useToast} from '@chakra-ui/react'
 export default function Settings({appInfo, setAppInfo}) {
     const toast = useToast()
 
+    const initSelectKB = []
+    appInfo.kbs.map((item) => (
+        initSelectKB.push(item.name)
+    ))
+
     const [llmList, setLlmList] = useState([])
     const [KBList, setKBList] = useState([])
     const [appName, setAppName] = useState(appInfo.name)
     const [appDescription, setAppDescription] = useState(appInfo.description)
     const [selectLLM, setSelectLLM] = useState(appInfo.llm_name)
+    const [selectKB, setSelectKB] = useState(initSelectKB)
 
     useEffect(() => {
         async function getList() {
@@ -34,7 +40,14 @@ export default function Settings({appInfo, setAppInfo}) {
     }, []);
 
     async function saveAppInfo() {
-        const resp = await app_info_modify(appInfo.id, appName, appDescription, selectLLM, appInfo.kb_id)
+        const kbs = []
+        if (selectKB.length > 0) {
+            selectKB.map((item) => {
+                const kb = KBList.filter((k) => k.name === item)[0]
+                kbs.push(kb)
+            })
+        }
+        const resp = await app_info_modify(appInfo.id, appName, appDescription, selectLLM, kbs)
         if (resp) {
             if (resp.errmsg) {
                 toast({
@@ -72,20 +85,16 @@ export default function Settings({appInfo, setAppInfo}) {
             <div>
                 <Flex gap={20} alignItems={'center'}>
                     <div className='text-lg'>应用名称</div>
-                    {appInfo.is_store ? (
-                        <div>{appInfo.name}</div>
-                    ) : (
-                        <input
-                            className='border border-gray-200 rounded w-[256px] h-[40px] indent-4 text-lg'
-                            maxLength={32}
-                            value={appName}
-                            onChange={(e) => {
-                                if (!(e.target.value === '\n')) {
-                                    setAppName(e.target.value)
-                                }
-                            }}
-                        />
-                    )}
+                    <input
+                        className='border border-gray-200 rounded w-[256px] h-[40px] indent-4 text-lg'
+                        maxLength={32}
+                        value={appName}
+                        onChange={(e) => {
+                            if (!(e.target.value === '\n')) {
+                                setAppName(e.target.value)
+                            }
+                        }}
+                    />
                 </Flex>
             </div>
             <div className='mt-10'>
@@ -106,11 +115,7 @@ export default function Settings({appInfo, setAppInfo}) {
             <div className='mt-10'>
                 <Flex gap={20} alignItems={'center'}>
                     <div className='text-lg'>应用类型</div>
-                    {appInfo.is_store ? (
-                        <div>系统应用</div>
-                    ) : (
-                        <div>自建应用</div>
-                    )}
+                    <div>自建应用</div>
                 </Flex>
             </div>
             <div className='mt-10'>
@@ -136,11 +141,21 @@ export default function Settings({appInfo, setAppInfo}) {
             <div className='mt-10'>
                 <Flex gap={20} alignItems={'center'}>
                     <div className='text-lg'>关联知识库</div>
-                    {appInfo.kb_name ? (
-                        <div>{appInfo.kb_name}</div>
-                    ) : (
-                        <div className='ml-[-16px]'>没有关联任何知识库</div>
-                    )}
+                    <CheckboxGroup
+                        onChange={(e) => setSelectKB(e)}
+                        defaultValue={selectKB}
+                    >
+                        <Stack spacing={5} direction='column'>
+                            {KBList.map((item) => (
+                                <Checkbox key={item.id} value={item.name}>{item.name}</Checkbox>
+                            ))}
+                        </Stack>
+                    </CheckboxGroup>
+                    {/*{appInfo.kb_name ? (*/}
+                    {/*    <div>{appInfo.kb_name}</div>*/}
+                    {/*) : (*/}
+                    {/*    <div className='ml-[-16px]'>没有关联任何知识库</div>*/}
+                    {/*)}*/}
                 </Flex>
             </div>
             <button

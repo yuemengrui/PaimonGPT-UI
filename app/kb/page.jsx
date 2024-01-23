@@ -29,7 +29,6 @@ export default function KB() {
 
     async function getKBList() {
         const res = await get_knowledge_base_list()
-        console.log('kb list res', res)
         if (res && res.length) {
             setKBList(res)
         }
@@ -129,19 +128,19 @@ export default function KB() {
                 <Modal isOpen={true} onClose={closeModal}>
                     <ModalOverlay/>
                     <ModalContent>
-                        <ModalHeader>创建新应用</ModalHeader>
+                        <ModalHeader>创建知识库</ModalHeader>
                         <ModalCloseButton/>
                         <ModalBody>
-                            <div>应用名称</div>
+                            <div>知识库名称</div>
                             <Input value={newKBName} onChange={(e) => {
                                 setNewKBName(e.target.value)
-                            }} placeholder={'请输入应用名称...'}/>
-                            <div>请选择模型</div>
+                            }} placeholder={'请输入知识库名称...'}/>
+                            <div>请选择Embedding模型</div>
                             <Select
                                 onChange={(e) => {
                                     setSelectEmbModel(e.target.value)
                                 }}
-                                placeholder='请选择模型'
+                                placeholder='请选择Embedding模型'
                             >
                                 {embModelList.map((item) => {
                                     return (

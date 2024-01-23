@@ -73,7 +73,7 @@ export async function app_create_from_appstore(app_id) {
 }
 
 
-export async function app_create(name, llm_name, kb_id = null) {
+export async function app_create(name, llm_name, kbs = []) {
     const args = {
         method: "POST",
         headers: {
@@ -83,7 +83,7 @@ export async function app_create(name, llm_name, kb_id = null) {
         body: JSON.stringify({
             "name": name,
             "llm_name": llm_name,
-            "kb_id": kb_id
+            "kbs": kbs
         })
     }
 

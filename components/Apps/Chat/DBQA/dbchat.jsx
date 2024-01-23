@@ -5,8 +5,8 @@ import {useEffect, useState} from "react";
 import Tag from "/components/Tag/Tag";
 import {Flex} from "@chakra-ui/react";
 import {get_app_chat_message_list} from "/api/app";
-import {v4 as uuidv4} from "uuid"
-import {db_chat} from "/api/db";
+import {v4 as uuidv4} from "uuid";
+import {fetchEventSource} from '@microsoft/fetch-event-source';
 
 
 export default function DBChatPage({dbName, appInfo, chat_id, chat_name}) {
@@ -35,6 +35,7 @@ export default function DBChatPage({dbName, appInfo, chat_id, chat_name}) {
         setMessageList(prevList => [...prevList.slice(0, -1), data])
     }
 
+
     async function generate(query) {
         const message = {
             id: uuidv4(),
@@ -53,24 +54,45 @@ export default function DBChatPage({dbName, appInfo, chat_id, chat_name}) {
         }
         addMessage(responseMessage)
 
-        const response = await db_chat(dbName, appInfo.llm_name, query)
-        if (response) {
-            updateMessage({
-                id: responseMessage.id,
-                role: responseMessage.role,
-                type: 'text',
-                content: response['data'],
-                response: response,
-            })
-        } else {
-            updateMessage({
-                id: responseMessage.id,
-                role: responseMessage.role,
-                type: 'text',
-                content: '抱歉！服务繁忙！请稍后重试！',
-                response: {},
-            })
-        }
+        await fetchEventSource(process.env.NEXT_PUBLIC_DBQA_DB_CHAT, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": localStorage.getItem("Authorization")
+            },
+            body: JSON.stringify({
+                "db_name": dbName,
+                "prompt": query,
+                "model_name": appInfo.llm_name,
+                "table_summary": true
+            }),
+            onmessage(msg) {
+                // 解码内容
+                try {
+                    const res = JSON.parse(msg.data)
+                    updateMessage({
+                        id: responseMessage.id,
+                        role: responseMessage.role,
+                        type: 'text',
+                        content: res['answer'],
+                        response: res,
+                    })
+                } catch (e) {
+                    console.log(e)
+                }
+
+            },
+            onerror(error) {
+                updateMessage({
+                    id: responseMessage.id,
+                    role: responseMessage.role,
+                    type: 'text',
+                    content: '抱歉！服务繁忙！请稍后重试！',
+                    response: {},
+                })
+                throw error
+            }
+        })
     }
 
 

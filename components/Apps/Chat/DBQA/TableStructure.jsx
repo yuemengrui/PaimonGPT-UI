@@ -4,11 +4,11 @@ import {useState} from "react";
 
 export default function TableStructure({tableInfo}) {
 
-    const [table, setTable] = useState(tableInfo[0].table_name || undefined)
+    const [table, setTable] = useState(null)
 
     return (
         <div>
-            <Select onChange={(e) => setTable(e.target.value)}>
+            <Select onChange={(e) => setTable(e.target.value)} placeholder={'请选择数据表'}>
                 {tableInfo.map((item) => (
                     <option key={item.table_name} value={item.table_name}>{item.table_name}</option>
                 ))}

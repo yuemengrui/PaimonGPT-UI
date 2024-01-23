@@ -52,7 +52,7 @@ export default function Page({appInfo}) {
             setLoading(true);
             const res = await createDatabaseSession(db, ip, port, user, password, dbName);
             if (res) {
-                setSession(db);
+                setSession(res.db_name);
                 setDBTableInfo(res.table_info)
             } else {
                 // TODO: 异常处理

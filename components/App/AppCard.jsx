@@ -84,7 +84,7 @@ export default function AppCard({app, getAppList}) {
                 <div className='mb-3 px-[14px] h-9 text-xs leading-normal text-gray-500 line-clamp-2'>
                     {app.description}
                 </div>
-                {!app.is_store && (
+                {!app.is_appstore && (
                     <div className='flex items-center flex-wrap min-h-[24px] px-2 mt-4 text-xs'>
                         自建应用
                     </div>
