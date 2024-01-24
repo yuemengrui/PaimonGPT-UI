@@ -54,6 +54,7 @@ export default function UniversalChatPage({appInfo, chat_id, chat_name}) {
         addMessage(responseMessage)
 
         await fetchEventSource(process.env.NEXT_PUBLIC_LLM_CHAT, {
+            openWhenHidden: true,
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

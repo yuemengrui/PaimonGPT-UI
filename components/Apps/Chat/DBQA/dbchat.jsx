@@ -55,6 +55,7 @@ export default function DBChatPage({dbName, appInfo, chat_id, chat_name}) {
         addMessage(responseMessage)
 
         await fetchEventSource(process.env.NEXT_PUBLIC_DBQA_DB_CHAT, {
+            openWhenHidden: true,
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -63,8 +64,7 @@ export default function DBChatPage({dbName, appInfo, chat_id, chat_name}) {
             body: JSON.stringify({
                 "db_name": dbName,
                 "prompt": query,
-                "model_name": appInfo.llm_name,
-                "table_summary": true
+                "model_name": appInfo.llm_name
             }),
             onmessage(msg) {
                 // 解码内容
