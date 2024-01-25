@@ -19,7 +19,7 @@ export async function getPresetDatabases() {
     }
 }
 
-export async function createDatabaseSession(preset = '', host = '', port = '', username = '', password = '', db_name = '') {
+export async function createDatabaseSession(app_id, preset = '', host = '', port = '', username = '', password = '', db_name = '') {
     const args = {
         method: "POST",
         headers: {
@@ -27,6 +27,7 @@ export async function createDatabaseSession(preset = '', host = '', port = '', u
             "Authorization": localStorage.getItem('Authorization')
         },
         body: JSON.stringify({
+            "app_id": app_id,
             "preset": preset,
             "host": host,
             "port": port,
@@ -71,6 +72,22 @@ export async function getCurrentDatabaseTableData(db_name, table_name, page, pag
     }
 
     return await http(process.env.NEXT_PUBLIC_DBQA_DB_TABLE_DATA, args)
+}
+
+export async function save_table_desc(db_name, table_desc) {
+    const args = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": localStorage.getItem('Authorization')
+        },
+        body: JSON.stringify({
+            "db_name": db_name,
+            "table_description": table_desc,
+        })
+    }
+
+    return await http(process.env.NEXT_PUBLIC_DBQA_DB_TABLE_DESC, args)
 }
 
 

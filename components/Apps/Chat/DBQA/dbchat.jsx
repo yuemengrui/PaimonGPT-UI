@@ -62,6 +62,10 @@ export default function DBChatPage({dbName, appInfo, chat_id, chat_name}) {
                 "Authorization": localStorage.getItem("Authorization")
             },
             body: JSON.stringify({
+                "app_id": appInfo.id,
+                "chat_id": chat_id,
+                "uid": message.id,
+                "answer_uid": responseMessage.id,
                 "db_name": dbName,
                 "prompt": query,
                 "model_name": appInfo.llm_name

@@ -16,6 +16,7 @@ export default function UniversalChatPage({appInfo, chat_id, chat_name}) {
         getAppChatMessageList()
     }, []);
 
+
     async function getAppChatMessageList() {
         const message_list = await get_app_chat_message_list(chat_id)
         if (message_list && message_list.length) {
@@ -72,6 +73,7 @@ export default function UniversalChatPage({appInfo, chat_id, chat_name}) {
                 // 解码内容
                 try {
                     const res = JSON.parse(msg.data)
+
                     updateMessage({
                         id: responseMessage.id,
                         role: responseMessage.role,

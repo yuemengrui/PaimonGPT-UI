@@ -37,6 +37,8 @@ export default function Page({appInfo}) {
     const [loading, setLoading] = useState(false);
     const [session, setSession] = useState("");
     const [dbTableInfo, setDBTableInfo] = useState(null)
+    const [dbTableDesc, setDBTableDesc] = useState(null)
+    const [chatId, setChatId] = useState(null)
 
     async function handleDatabaseSessionClose() {
         try {
@@ -50,10 +52,12 @@ export default function Page({appInfo}) {
         e.preventDefault();
         try {
             setLoading(true);
-            const res = await createDatabaseSession(db, ip, port, user, password, dbName);
+            const res = await createDatabaseSession(appInfo.id, db, ip, port, user, password, dbName);
             if (res) {
                 setSession(res.db_name);
-                setDBTableInfo(res.table_info)
+                setDBTableInfo(res.origin_table_info)
+                setChatId(res.chat_id)
+                setDBTableDesc(res.table_description)
             } else {
                 // TODO: 异常处理
             }
@@ -76,7 +80,7 @@ export default function Page({appInfo}) {
         <div className='flex h-full' style={{maxHeight: 'calc(100vh - 68px)', minHeight: 'calc(100vh - 76px)'}}>
             <div
                 className='flex flex-1 border border-gray-200 bg-white rounded-3xl mt-1 mr-2 ml-2 mb-2 overflow-y-auto h-full'>
-                <div className="flex w-[600px]">
+                <div className="flex max-w-[660px]">
                     {session ? (
                         <div className="w-full">
                             <div className="flex px-6 mt-4 justify-between">
@@ -91,7 +95,7 @@ export default function Page({appInfo}) {
 
                                 <TabPanels>
                                     <TabPanel>
-                                        <TableStructure tableInfo={dbTableInfo}/>
+                                        <TableStructure db_name={session} tableInfo={dbTableInfo} tableDesc={dbTableDesc} setTableDesc={setDBTableDesc}/>
                                     </TabPanel>
                                     <TabPanel>
                                         <TableData db_name={session} tableInfo={dbTableInfo}/>
@@ -157,7 +161,7 @@ export default function Page({appInfo}) {
                     )}
                 </div>
                 <div className='w-[1px] h-full bg-gray-200'/>
-                {session && (<DBChatPage dbName={db} appInfo={appInfo} chat_id={1} chat_name={'DBQA'}/>)}
+                {session && (<DBChatPage dbName={db} appInfo={appInfo} chat_id={chatId} chat_name={'DBQA'}/>)}
             </div>
         </div>
     )

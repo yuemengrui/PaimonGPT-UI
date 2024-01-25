@@ -21,8 +21,8 @@ export default function AppStore() {
         if (res) {
             const temp = []
             res.map((item) => {
-                if (item.is_store) {
-                    temp.push(item.store_app_uid)
+                if (item.is_appstore) {
+                    temp.push(item.appstore_uid)
                 }
                 setInstalledAppList(temp)
             })
