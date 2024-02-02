@@ -68,7 +68,9 @@ export default function DBChatPage({dbName, appInfo, chat_id, chat_name}) {
                 "answer_uid": responseMessage.id,
                 "db_name": dbName,
                 "prompt": query,
-                "model_name": appInfo.llm_name
+                "model_name": appInfo.llm_name,
+                "limit": 3,
+                "threshold": 0.01
             }),
             onmessage(msg) {
                 // 解码内容

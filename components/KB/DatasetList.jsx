@@ -40,7 +40,9 @@ export default function DatasetList({kb_id}) {
     }, []);
 
     async function show_data_detail(data) {
+        console.log(data)
         data.detail = await get_kb_data_detail(data.id)
+        console.log(data)
         setDataDetail(data)
         setShowDataDetail(true)
     }
@@ -86,7 +88,7 @@ export default function DatasetList({kb_id}) {
                     <button className='mt-2 ml-2 text-blue-400' onClick={back}>返回</button>
                     <Flex gap={12} ml={12} mt={12}>
                         <div className='text-xl'>文件名：{dataDetail.file_name}</div>
-                        <div className='text-xl'>数据总量：{dataDetail.data_total}</div>
+                        <div className='text-xl'>数据总量：{dataDetail.chunk_total}</div>
                     </Flex>
                     <ul className='mt-12 px-12'>
                         {dataDetail.detail.map((item) => (

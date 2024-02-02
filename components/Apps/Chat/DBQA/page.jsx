@@ -80,7 +80,7 @@ export default function Page({appInfo}) {
         <div className='flex h-full' style={{maxHeight: 'calc(100vh - 68px)', minHeight: 'calc(100vh - 76px)'}}>
             <div
                 className='flex flex-1 border border-gray-200 bg-white rounded-3xl mt-1 mr-2 ml-2 mb-2 overflow-y-auto h-full'>
-                <div className="flex max-w-[660px]">
+                <div className="flex w-[660px] max-w-[660px]">
                     {session ? (
                         <div className="w-full">
                             <div className="flex px-6 mt-4 justify-between">
@@ -161,7 +161,7 @@ export default function Page({appInfo}) {
                     )}
                 </div>
                 <div className='w-[1px] h-full bg-gray-200'/>
-                {session && (<DBChatPage dbName={db} appInfo={appInfo} chat_id={chatId} chat_name={'DBQA'}/>)}
+                {session && (<DBChatPage dbName={session} appInfo={appInfo} chat_id={chatId} chat_name={'DB QA'}/>)}
             </div>
         </div>
     )

@@ -101,7 +101,7 @@ export async function kb_data_import(kb_id, method_id, files) {
 }
 
 
-export async function get_kb_data_detail(data_id) {
+export async function get_kb_data_detail(file_id) {
     const args = {
         method: "POST",
         headers: {
@@ -109,7 +109,7 @@ export async function get_kb_data_detail(data_id) {
             "Authorization": localStorage.getItem('Authorization')
         },
         body: JSON.stringify({
-            "data_id": data_id,
+            "file_id": file_id,
         })
     }
 

@@ -65,6 +65,44 @@ export default function TableStructure({db_name, tableInfo, tableDesc, setTableD
         setTableDesc(temp)
     }
 
+    function updateTableExamplesQuestion(e) {
+        const examples = [
+            {
+                'question': e.target.value,
+                'sql': ''
+            }
+        ]
+        const temp = []
+        tableDesc.map((item) => {
+            if (item.table_name === table) {
+                examples[0].sql = (item.examples.length > 0 ? item.examples[0].sql : '')
+                temp.push({...item, examples})
+            } else {
+                temp.push({...item})
+            }
+        })
+        setTableDesc(temp)
+    }
+
+    function updateTableExamplesSql(e) {
+        const examples = [
+            {
+                'question': '',
+                'sql': e.target.value
+            }
+        ]
+        const temp = []
+        tableDesc.map((item) => {
+            if (item.table_name === table) {
+                examples[0].question = item.examples.length > 0 ? item.examples[0].question : ''
+                temp.push({...item, examples})
+            } else {
+                temp.push({...item})
+            }
+        })
+        setTableDesc(temp)
+    }
+
     async function saveTableDesc() {
         const response = await save_table_desc(db_name, tableDesc)
         if (response) {
@@ -136,13 +174,13 @@ export default function TableStructure({db_name, tableInfo, tableDesc, setTableD
                         />
                     </div>
                     <div className='mt-4 w-full flex text-center items-center'>
-                        <div className='w-[128px] max-w-[128px]'>字段名</div>
-                        <div className='w-[36px] max-w-[36px]'>启用</div>
-                        <div className='w-[496px] max-w-[496px]'>注释</div>
+                        <div className='w-[200px] max-w-[200px]'>字段名</div>
+                        <div className='w-[40px] max-w-[40px]'>启用</div>
+                        <div className='w-[420px] max-w-[420px]'>注释</div>
                     </div>
                     {tableDesc.filter((t) => t.table_name === table)[0].columns.map((item) => (
                         <>
-                            <div className='mt-2 w-full flex text-center items-center'>
+                            <div className={`${item.is_deprecated ? 'bg-gray-100 text-gray-400' : ''} mt-2 w-full flex text-center items-center`}>
                                 <div className='w-[128px] max-w-[128px]'>{item.name}</div>
                                 <input type="checkbox" onChange={() => {
                                     updateTableColumnDeprecated(item.name)
@@ -151,12 +189,31 @@ export default function TableStructure({db_name, tableInfo, tableDesc, setTableD
                                     onChange={(e) => {
                                         updateTableColumnComment(e, item.name)
                                     }}
-                                    className='ml-6 w-[496px] max-w-[496px] text-center'
+                                    className={`${item.is_deprecated ? 'bg-gray-100' : ''} ml-6 w-[496px] max-w-[496px] text-center`}
                                     value={item.comment}
                                 />
                             </div>
                         </>
                     ))}
+                    <div className='mt-6'>添加几个示例</div>
+                    <div>
+                        <div className='flex'>
+                            <div>问题:</div>
+                            <input
+                                onChange={(e) => {updateTableExamplesQuestion(e)}}
+                                className='border w-full'
+                                value={tableDesc.filter((t) => t.table_name === table)[0].examples.length > 0 ? tableDesc.filter((t) => t.table_name === table)[0].examples[0].question: ''}
+                            />
+                        </div>
+                        <div className='flex'>
+                            <div>sql:</div>
+                            <input
+                                onChange={(e) => {updateTableExamplesSql(e)}}
+                                className='border w-full'
+                                value={tableDesc.filter((t) => t.table_name === table)[0].examples.length > 0 ? tableDesc.filter((t) => t.table_name === table)[0].examples[0].sql: ''}
+                            />
+                        </div>
+                    </div>
                 </>
             )}
 

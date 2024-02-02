@@ -40,7 +40,7 @@ export default function MenuList() {
                 return (
                     <button
                         key={item.pathname}
-                        className={`${pathname.split('/')[1] === item.root_path ? 'shadow-[0_0_3px_3px_rgba(244,114,182,0.2)] bg-pink-50 text-pink-400' : 'hover:bg-white hover:text-pink-300'} px-2 py-1 rounded-lg`}
+                        className={`${pathname.split('/')[1] === item.root_path ? 'shadow-[0_0_2px_2px_rgba(244,114,182,0.2)] bg-pink-50 text-pink-400' : 'hover:bg-white hover:text-pink-300'} px-2 py-1 rounded-lg`}
                         onClick={() => router.push(item.pathname)}
                     >
                         <Flex gap={1} direction={'row'} align={'center'} textAlign={'center'}>
