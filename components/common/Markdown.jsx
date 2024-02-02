@@ -1,14 +1,14 @@
-import { memo } from "react"
-import ReactMarkdown, { Options } from "react-markdown"
+import {memo} from "react"
+import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/prism"
+import {Prism as SyntaxHighlighter} from "react-syntax-highlighter"
+import {a11yDark} from "react-syntax-highlighter/dist/esm/styles/prism"
 
-function Markdown({ children, className = "", ...props }: Options) {
+function Markdown({children, className = "", ...props}) {
     return (
         <ReactMarkdown
             components={{
-                code({ node, inline, className, children, ...props }) {
+                code({node, inline, className, children, ...props}) {
                     const match = /language-(\w+)/.exec(className || "")
                     return !inline ? (
                         <SyntaxHighlighter

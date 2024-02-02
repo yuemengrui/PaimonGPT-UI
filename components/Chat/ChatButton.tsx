@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ChatButton = ({children, ...props}) => {
+const ChatButton = ({children, ...props}: { children: any }) => {
 
     return (
         <div
