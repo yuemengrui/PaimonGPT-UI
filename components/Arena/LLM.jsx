@@ -139,7 +139,7 @@ export default function LLM() {
                 response: {},
             }
             setMessageList(prevState => [...prevState, responseMessage])
-            await fetchEventSource(process.env.NEXT_PUBLIC_PREFIX + process.env.NEXT_PUBLIC_LLM_CHAT_SIMPLE, {
+            await fetchEventSource(process.env.NEXT_PUBLIC_LLM_CHAT_SIMPLE, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
