@@ -140,6 +140,7 @@ export default function LLM() {
             }
             setMessageList(prevState => [...prevState, responseMessage])
             await fetchEventSource(process.env.NEXT_PUBLIC_LLM_CHAT_SIMPLE, {
+                openWhenHidden: true,
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
