@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: 'export',
+    // output: 'export',
     images: {unoptimized: true},
     webpack: (config) => {
         config.module.rules.push({
@@ -10,6 +10,16 @@ const nextConfig = {
         });
 
         return config;
+    },
+
+    // dev
+    async rewrites() {
+        return [
+            {
+                source: '/ai/:path*',
+                destination: 'http://127.0.0.1:24601/ai/:path*'
+            }
+        ]
     }
 }
 
