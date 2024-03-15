@@ -5,7 +5,6 @@ import Tag from "/components/Tag/Tag";
 import {Flex} from "@chakra-ui/react";
 import {get_app_chat_message_list} from "/api/app";
 import {v4 as uuidv4} from "uuid"
-import {fetchEventSource} from '@microsoft/fetch-event-source';
 import ChartChatMessageList from "./ChartChatMessageList";
 import {chart_chat} from "/api/chart";
 

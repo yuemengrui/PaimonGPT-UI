@@ -22,13 +22,6 @@ mermaidAPI.initialize({
     }
 });
 
-
-const style = {
-    minWidth: '480px',
-    height: '100%',
-    overflow: 'auto',
-}
-
 // eslint-disable-next-line react/display-name
 const Chart = React.forwardRef((props: {
     PrimitiveCode: string
