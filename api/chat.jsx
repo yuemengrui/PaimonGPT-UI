@@ -18,7 +18,7 @@ export async function chat(prompt, model_name = "") {
     console.log('response', response)
 
     if (response) {
-        return response['data']
+        return response
     }
 }
 

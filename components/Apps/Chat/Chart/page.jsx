@@ -100,7 +100,7 @@ export default function Chart({appInfo}) {
                              newChat={newChat} deleteChat={deleteChat}/>
                 <div className='w-[1px] h-full bg-gray-200'/>
                 {selectChatId && (<ChartChatPage appInfo={appInfo} chat_id={selectChatId}
-                                                     chat_name={chatList.length ? chatList.filter((item) => item.id === selectChatId)[0].name || '新对话' : '新对话'}/>)}
+                                                 chat_name={chatList.length ? chatList.filter((item) => item.id === selectChatId)[0].name || '新对话' : '新对话'}/>)}
             </div>
         </div>
     )
