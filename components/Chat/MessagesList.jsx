@@ -26,7 +26,7 @@ import Image from "next/image";
 import {useToast} from '@chakra-ui/react'
 
 
-export default function MessageList({messageList, stream_generate}) {
+export default function MessageList({messageList, stream_generate, waitingReply}) {
     const toast = useToast()
     const [showFullResponseModal, setShowFullResponseModal] = useState(false)
     const [fullResponse, setFullResponse] = useState({})
@@ -132,7 +132,7 @@ export default function MessageList({messageList, stream_generate}) {
                                                   justifyContent={'flex-start'}>
                                                 <div
                                                     className='text-3xl bg-white border rounded-lg border-gray-100 shadow-[0_0_1px_1px_rgba(0,0,0,0.2)]'>
-                                                    <SiOpenai/></div>
+                                                    <SiOpenai className={waitingReply ? 'animate-spin' : ''} /></div>
                                                 <MyTooltip label='复制'>
                                                     <ChatButton onClick={() => copyTextToClipboard(message.content)}>
                                                         <GoCopy/>

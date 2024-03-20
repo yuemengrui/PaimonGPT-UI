@@ -11,6 +11,7 @@ import {fetchEventSource} from '@microsoft/fetch-event-source';
 
 export default function UniversalChatPage({appInfo, chat_id, chat_name}) {
     const [messageList, setMessageList] = useState([])
+    const [waitingReply, setWaitingReply] = useState(false)
 
     useEffect(() => {
         getAppChatMessageList()
@@ -53,6 +54,7 @@ export default function UniversalChatPage({appInfo, chat_id, chat_name}) {
             response: {},
         }
         addMessage(responseMessage)
+        setWaitingReply(true)
 
         await fetchEventSource(process.env.NEXT_PUBLIC_LLM_CHAT, {
             openWhenHidden: true,
@@ -73,7 +75,7 @@ export default function UniversalChatPage({appInfo, chat_id, chat_name}) {
                 // 解码内容
                 try {
                     const res = JSON.parse(msg.data)
-
+                    setWaitingReply(false)
                     updateMessage({
                         id: responseMessage.id,
                         role: responseMessage.role,
@@ -87,6 +89,7 @@ export default function UniversalChatPage({appInfo, chat_id, chat_name}) {
 
             },
             onerror(error) {
+                setWaitingReply(false)
                 updateMessage({
                     id: responseMessage.id,
                     role: responseMessage.role,
@@ -109,7 +112,7 @@ export default function UniversalChatPage({appInfo, chat_id, chat_name}) {
             </div>
             <div className='h-[1px] w-full bg-gray-200'/>
             {messageList.length && (
-                <MessageList messageList={messageList} stream_generate={stream_generate}/>)}
+                <MessageList messageList={messageList} stream_generate={stream_generate} waitingReply={waitingReply}/>)}
             <ChatInput stream_generate={stream_generate}/>
         </div>
     )

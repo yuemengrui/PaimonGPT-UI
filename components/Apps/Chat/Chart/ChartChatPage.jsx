@@ -11,6 +11,7 @@ import {chart_chat} from "/api/chart";
 
 export default function ChartChatPage({appInfo, chat_id, chat_name}) {
     const [messageList, setMessageList] = useState([])
+    const [waitingReply, setWaitingReply] = useState(false)
 
     useEffect(() => {
         getAppChatMessageList()
@@ -45,6 +46,7 @@ export default function ChartChatPage({appInfo, chat_id, chat_name}) {
         }
         addMessage(message)
 
+        setWaitingReply(true)
         const responseMessage = {
             id: uuidv4(),
             role: "assistant",
@@ -63,6 +65,7 @@ export default function ChartChatPage({appInfo, chat_id, chat_name}) {
             "model_name": appInfo.llm_name
         })
 
+        setWaitingReply(false)
         updateMessage({
             id: responseMessage.id,
             role: responseMessage.role,
@@ -82,7 +85,7 @@ export default function ChartChatPage({appInfo, chat_id, chat_name}) {
             </div>
             <div className='h-[1px] w-full bg-gray-200'/>
             {messageList.length && (
-                <ChartChatMessageList messageList={messageList} stream_generate={generate}/>)}
+                <ChartChatMessageList messageList={messageList} stream_generate={generate} waitingReply={waitingReply}/>)}
             <ChatInput stream_generate={generate}/>
         </div>
     )

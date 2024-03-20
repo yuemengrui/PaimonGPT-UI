@@ -11,6 +11,7 @@ import {fetchEventSource} from '@microsoft/fetch-event-source';
 
 export default function DBChatPage({dbName, appInfo, chat_id, chat_name}) {
     const [messageList, setMessageList] = useState([])
+    const [waitingReply, setWaitingReply] = useState(false)
 
     useEffect(() => {
         getAppChatMessageList()
@@ -45,6 +46,7 @@ export default function DBChatPage({dbName, appInfo, chat_id, chat_name}) {
         }
         addMessage(message)
 
+        setWaitingReply(true)
         const responseMessage = {
             id: uuidv4(),
             role: "assistant",
@@ -76,6 +78,7 @@ export default function DBChatPage({dbName, appInfo, chat_id, chat_name}) {
                 // 解码内容
                 try {
                     const res = JSON.parse(msg.data)
+                    setWaitingReply(false)
                     updateMessage({
                         id: responseMessage.id,
                         role: responseMessage.role,
@@ -89,6 +92,7 @@ export default function DBChatPage({dbName, appInfo, chat_id, chat_name}) {
 
             },
             onerror(error) {
+                setWaitingReply(false)
                 updateMessage({
                     id: responseMessage.id,
                     role: responseMessage.role,
@@ -112,7 +116,7 @@ export default function DBChatPage({dbName, appInfo, chat_id, chat_name}) {
             </div>
             <div className='h-[1px] w-full bg-gray-200'/>
             {messageList.length && (
-                <MessageList messageList={messageList} stream_generate={generate}/>)}
+                <MessageList messageList={messageList} stream_generate={generate} waitingReply={waitingReply}/>)}
             <ChatInput stream_generate={generate}/>
         </div>
     )

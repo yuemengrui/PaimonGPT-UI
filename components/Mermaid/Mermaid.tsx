@@ -22,6 +22,11 @@ mermaidAPI.initialize({
     }
 });
 
+// @ts-ignore
+export function checkMermaidCodeOK({code}) {
+    return mermaid.parse(code)
+}
+
 // eslint-disable-next-line react/display-name
 const Chart = React.forwardRef((props: {
     PrimitiveCode: string
