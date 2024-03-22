@@ -9,7 +9,7 @@ import {v4 as uuidv4} from "uuid"
 import {fetchEventSource} from '@microsoft/fetch-event-source';
 
 
-export default function ProgrammingChatPage({appInfo, chat_id, chat_name}) {
+export default function UniversalChatPage({appInfo, chat_id, chat_name, prompt_instruction=''}) {
     const [messageList, setMessageList] = useState([])
     const [waitingReply, setWaitingReply] = useState(false)
 
@@ -68,7 +68,7 @@ export default function ProgrammingChatPage({appInfo, chat_id, chat_name}) {
                 "chat_id": chat_id,
                 "uid": message.id,
                 "answer_uid": responseMessage.id,
-                "prompt": '你是一个编程大师，你要为学生们解决各种编程问题。学生的问题是：' + message.content,
+                "prompt": prompt_instruction + message.content,
                 "model_name": appInfo.llm_name
             }),
             onmessage(msg) {

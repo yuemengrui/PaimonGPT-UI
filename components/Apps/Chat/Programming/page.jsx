@@ -8,6 +8,7 @@ import UniversalChatPage from "/components/Chat/UniversalChatPage";
 
 
 export default function ProgrammingChat({appInfo}) {
+    const prompt_instruction = '你是一个编程大师，你要为学生们解决各种编程问题。学生的问题是：'
     const toast = useToast()
     const [chatList, setChatList] = useState([])
     const [selectChatId, setSelectChatId] = useState(null)
@@ -99,8 +100,10 @@ export default function ProgrammingChat({appInfo}) {
                              chatList={chatList} selectChatId={selectChatId} setSelectChatId={setSelectChatId}
                              newChat={newChat} deleteChat={deleteChat}/>
                 <div className='w-[1px] h-full bg-gray-200'/>
-                {selectChatId && (<UniversalChatPage appInfo={appInfo} chat_id={selectChatId}
-                                                     chat_name={chatList.length ? chatList.filter((item) => item.id === selectChatId)[0].name || '新对话' : '新对话'}/>)}
+                {selectChatId && (<UniversalChatPage appInfo={appInfo}
+                                                     chat_id={selectChatId}
+                                                     chat_name={chatList.length ? chatList.filter((item) => item.id === selectChatId)[0].name || '新对话' : '新对话'}
+                                                     prompt_instruction={prompt_instruction}/>)}
             </div>
         </div>
     )
